@@ -11,12 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+//classe da entidade usuario
 @Entity(name = "usuarios")
 @Table(name = "usuarios")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter //gera o getter automaticamente
+@Setter //gera o setter automaticamente
+@AllArgsConstructor //gera o construtor com argumentos automaticamente
+@NoArgsConstructor  //gera o construtor sem argumentos automaticamente
 public class Usuario{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
