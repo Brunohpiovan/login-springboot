@@ -16,7 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity //Habilita a configuração de segurança da web para o Spring Security
 public class SecurityConfig {
 
     @Autowired
@@ -35,16 +35,16 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/recover-password").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/reset-password").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasRole("USER")
+                .authorizeHttpRequests(authorize -> authorize .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() //permite o end point para todos que tentarem acessar
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll() //permite o end point para todos que tentarem acessar
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll() //permite o end point para todos que tentarem acessar
+                        .requestMatchers(HttpMethod.POST, "/recover-password").permitAll() //permite o end point para todos que tentarem acessar
+                        .requestMatchers(HttpMethod.POST, "/reset-password").permitAll() //permite o end point para todos que tentarem acessar
+                        .requestMatchers("/admin/**").hasRole("ADMIN") //permite o end point apenas para usuarios com cargo de ADMIN
+                        .requestMatchers("/user/**").hasRole("USER")    //permite o end point apenas para usuarios com cargo de USER
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o filtro de segurança personalizado antes do filtro padrão de autenticação de usuário.
         return http.build();
     }
 

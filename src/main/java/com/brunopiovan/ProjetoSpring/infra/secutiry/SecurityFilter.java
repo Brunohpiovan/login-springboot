@@ -29,13 +29,13 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         var token = this.recoverToken(request);
-        var login = tokenService.validateToken(token);
+        var login = tokenService.validateToken(token); //verifica se o token é valido
 
         if (login != null) {
-            Usuario user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found"));
+            Usuario user = userRepository.findByEmail(login).orElseThrow(() -> new RuntimeException("User Not Found")); //procura um usuario com o email que veio em login
             List<SimpleGrantedAuthority> authorities = user.getRoles().stream() .map(role -> new SimpleGrantedAuthority(role))
                     .collect(   Collectors.toList());
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
+            var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities); // Cria um objeto de autenticação com as authorities do usuário.
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
         filterChain.doFilter(request, response);
