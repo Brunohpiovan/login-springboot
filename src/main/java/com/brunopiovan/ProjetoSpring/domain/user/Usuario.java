@@ -19,8 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Usuario{
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String nome;
     private String email;
     private String senha;
