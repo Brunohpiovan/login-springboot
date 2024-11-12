@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,7 +44,11 @@ public class authController {
             newUser.setSenha(passwordEncoder.encode(body.senha()));
             newUser.setEmail(body.email());
             newUser.setNome(body.nome());
-            newUser.setRoles(body.roles());
+            List<String> roles = new ArrayList<>(body.roles());
+            if(!roles.contains("ROLE_USER")){
+                roles.add("ROLE_USER");
+            }
+            newUser.setRoles(roles);
             this.repository.save(newUser);
 
             String token = this.tokenService.generateToken(newUser);
