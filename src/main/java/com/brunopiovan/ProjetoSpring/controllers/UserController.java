@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+//classe para testar as permicoes dos cargos
 @RestController
 public class UserController {
 
@@ -22,16 +23,19 @@ public class UserController {
         return ResponseEntity.ok("Sucesso");
     }
 
+    //somente cargo ADMIN pode acessar esse endpoint
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {
         return "Página de administrador";
     }
 
+    //somente cargo ADMIN pode acessar esse endpoint
     @GetMapping("/admin/lista")
     public List<Usuario> findAll() {
         return repository.findAll();
     }
 
+    //qualquer usuario cadastrado pode acessar esse endpoint
     @GetMapping("/user/dashboard")
     public String userDashboard() {
         return "Página de usuário";
