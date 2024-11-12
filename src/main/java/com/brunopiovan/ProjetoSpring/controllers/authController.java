@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+//classe que recebe as requisicoes de login e registro,na rota /auth/login ou /auth/register
+//todos usuarios tem acesso a essas rotas
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,9 +31,9 @@ public class authController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody LoginResquestDTO body){
-        Usuario user = this.repository.findByEmail(body.email()).orElseThrow(()-> new RuntimeException("User not found"));
-        if (passwordEncoder.matches(body.senha(), user.getSenha())){
-            String token = this.tokenService.generateToken(user);
+        Usuario user = this.repository.findByEmail(body.email()).orElseThrow(()-> new RuntimeException("User not found")); //verifica se existe um usuario com o login na base de dados
+        if (passwordEncoder.matches(body.senha(), user.getSenha())){ //verifica se a senha encodada é correta
+            String token = this.tokenService.generateToken(user);   //gera um token
             return ResponseEntity.ok(new ResponseDTO(user.getNome(), token));
         }
         return ResponseEntity.badRequest().build();
@@ -38,20 +41,20 @@ public class authController {
 
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<Usuario> user = this.repository.findByEmail(body.email());
-        if(user.isEmpty()){
+        Optional<Usuario> user = this.repository.findByEmail(body.email()); //procura na base de dados se ja existe um usuario com aquele email
+        if(user.isEmpty()){ //se nao existir
             Usuario newUser = new Usuario();
             newUser.setSenha(passwordEncoder.encode(body.senha()));
             newUser.setEmail(body.email());
             newUser.setNome(body.nome());
             List<String> roles = new ArrayList<>(body.roles());
-            if(!roles.contains("ROLE_USER")){
+            if(!roles.contains("ROLE_USER")){ //se o usuario setado nao vier com o cargo de USER,aqui é setado automaticamente
                 roles.add("ROLE_USER");
             }
             newUser.setRoles(roles);
-            this.repository.save(newUser);
+            this.repository.save(newUser); //salva esse novo usuario na
 
-            String token = this.tokenService.generateToken(newUser);
+            String token = this.tokenService.generateToken(newUser); //gera um token
             return ResponseEntity.ok(new ResponseDTO(newUser.getNome(), token));
         }
 
